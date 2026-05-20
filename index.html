@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10 Tage Dhul-Hijjah Tracker</title>
+    <title>Dhul-Hijjah Ultimate Tracker</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -14,13 +14,14 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --danger-color: #ef4444;
+            --arabic-color: #38bdf8;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -33,22 +34,43 @@
             padding-bottom: 100px;
         }
 
-        header {
-            text-align: center;
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border-color);
+        /* TAB SYSTEM */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            padding: 10px 0;
+            z-index: 10;
         }
 
-        header h1 {
-            font-size: 24px;
-            color: var(--accent-color);
-            margin-bottom: 6px;
-        }
-
-        header p {
-            font-size: 14px;
+        .tab-btn {
+            flex: 1;
+            background-color: var(--card-bg);
             color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .section-card {
@@ -59,26 +81,37 @@
             border: 1px solid var(--border-color);
         }
 
-        .section-title {
-            font-size: 18px;
+        .block-title {
+            font-size: 20px;
+            color: #ef4444;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .block-title.morning { color: #f59e0b; }
+        .block-title.day { color: #3b82f6; }
+
+        .prayer-sub-title {
+            font-size: 16px;
             color: var(--accent-color);
-            margin-bottom: 12px;
+            margin: 12px 0 6px 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .checkbox-item {
             display: flex;
             align-items: flex-start;
             padding: 10px 0;
-            border-bottom: 1px solid dashed var(--border-color);
+            border-bottom: 1px dashed var(--border-color);
             gap: 12px;
         }
 
-        .checkbox-item:last-child {
-            border-bottom: none;
-        }
+        .checkbox-item:last-child { border-bottom: none; }
 
         input[type="checkbox"] {
             width: 22px;
@@ -95,30 +128,41 @@
             flex-grow: 1;
         }
 
+        /* TEXT BOXES FOR ARABIC & TRANSLITERATION */
         .dua-box {
             background-color: #111827;
             border-left: 4px solid var(--accent-color);
-            padding: 10px 12px;
+            padding: 12px;
             margin-top: 8px;
             border-radius: 0 8px 8px 0;
-            font-size: 14px;
         }
 
-        .dua-trans {
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Amiri', serif;
+            font-size: 22px;
+            text-align: right;
+            direction: rtl;
+            color: var(--arabic-color);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .trans-text {
             font-style: italic;
             color: #e2e8f0;
+            font-size: 14px;
             margin-bottom: 4px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        .dua-meaning {
+        .meaning-text {
             color: var(--text-muted);
             font-size: 12.5px;
         }
 
         .counter-container {
             text-align: center;
-            padding: 12px 0;
+            padding: 16px 0;
         }
 
         .counter-btn {
@@ -127,22 +171,11 @@
             font-weight: bold;
             font-size: 18px;
             border: none;
-            padding: 16px 32px;
+            padding: 16px;
             border-radius: 50px;
             width: 100%;
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-            transition: background 0.2s;
-        }
-
-        .counter-btn:active {
-            background-color: var(--accent-hover);
-        }
-
-        .counter-status {
-            margin-top: 8px;
-            font-size: 14px;
-            color: var(--text-muted);
         }
 
         .btn-group {
@@ -155,16 +188,11 @@
             background-color: #334155;
             color: var(--text-main);
             border: none;
-            padding: 8px 16px;
+            padding: 8px;
             border-radius: 6px;
             font-size: 13px;
             cursor: pointer;
             flex: 1;
-        }
-
-        .sub-btn.reset-danger {
-            background-color: #451a1a;
-            color: #fca5a5;
         }
 
         .footer-controls {
@@ -175,8 +203,6 @@
             background-color: #0b0f19;
             padding: 12px 16px;
             border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
             max-width: 600px;
             margin: 0 auto;
             z-index: 100;
@@ -186,7 +212,7 @@
             background-color: var(--danger-color);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: bold;
@@ -194,226 +220,186 @@
             width: 100%;
         }
 
-        details {
-            margin-top: 6px;
-        }
-        summary {
-            font-size: 13px;
-            color: var(--accent-color);
-            cursor: pointer;
-            padding: 4px 0;
-            outline: none;
-        }
+        details { margin-top: 6px; }
+        summary { font-size: 13px; color: var(--accent-color); cursor: pointer; padding: 4px 0; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🌙 Dhul-Hijjah Ibadah Tracker</h1>
-        <p>Die besten 10 Tage des Jahres maximal nutzen</p>
-    </header>
-
-    <!-- 1. TAHAJJUD & MORGEN -->
-    <div class="section-card">
-        <div class="section-title">🌅 1. Nacht & Früher Morgen</div>
-        
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_tahajjud">
-            <div class="checkbox-label">
-                <strong>Tahajjud & Witr</strong>
-                <div class="dua-box">
-                    <div class="dua-trans">"La ilaha illa-Allah wahdahu la sharika lah, lahul-mulku wa lahul-hamd, wa huwa 'ala kulli shay'in qadir. Subhanallah, walhamdulillah, wa la ilaha illa-Allah, wallahu akbar, wa la hawla wa la quwwata illa billah."</div>
-                    <div class="dua-meaning">Bete 2 Rak'at Tahajjud und schließe mit 3 Rak'at Witr ab. Mache danach aufrichtig Dua.</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_aufstehen">
-            <div class="checkbox-label">
-                <strong>Nach dem Aufstehen</strong>
-                <div class="dua-box">
-                    <div class="dua-trans">"Alhamdulillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur."</div>
-                    <div class="dua-meaning">Alles Lob gebührt Allah, Der uns ins Leben zurückgerufen hat, nachdem Er uns sterben ließ, und zu Ihm ist die Auferstehung.</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_wudu">
-            <div class="checkbox-label">
-                <strong>Gebetswaschung (Wudu)</strong>
-                <div class="dua-box">
-                    <div class="dua-trans"><strong>Vor Beginn:</strong> "Bismillah."</div>
-                    <div class="dua-trans" style="margin-top:6px;"><strong>Nach Abschluss:</strong> "Ashhadu an la ilaha illa-Allah wahdahu la sharika lah, wa ashhadu anna Muhammadan 'abduhu wa rasuluh. Allahummaj-'alni minat-tawwabina waj-'alni minal-mutatahhirin."</div>
-                    <div class="dua-meaning">...O Allah, mache mich von den Reumütigen und den Gereinigten.</div>
-                </div>
-            </div>
-        </div>
+    <!-- NAVIGATION TABS -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('tracker')">🌙 Ibadah Tracker</button>
+        <button class="tab-btn" onclick="switchTab('library')">📖 Suren & Duas</button>
     </div>
 
-    <!-- 2. STÄNDIGE BEGLEITER -->
-    <div class="section-card">
-        <div class="section-title">☀️ 2. Alltag & Ständige Begleiter</div>
+    <!-- ================= PAGE 1: TRACKER ================= -->
+    <div id="tracker" class="tab-content active">
         
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_alltag_dhikr">
-            <div class="checkbox-label">
-                <strong>Alltags-Formeln nutzen</strong>
-                <div class="dua-meaning" style="margin-top:4px;">Nutze jede freie Sekunde (Gehen, Kochen, Pause) für: <br><strong>Subhanallah • Alhamdulillah • La ilaha illa-Allah • Allahu Akbar</strong></div>
-            </div>
-        </div>
-
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_haus_aus">
-            <div class="checkbox-label">
-                <strong>Haus verlassen</strong>
-                <div class="dua-box">
-                    <div class="dua-trans">"Bismillah, tawakkaltu 'ala-Allah, wa la hawla wa la quwwata illa billah."</div>
-                    <div class="dua-meaning">Im Namen Allahs, ich vertraue auf Allah, und es gibt keine Macht noch Kraft außer durch Allah.</div>
+        <!-- BLOCK 1: MORGEN BLOCK -->
+        <div class="section-card">
+            <div class="block-title morning">🌅 Block 1: Nacht & Früher Morgen</div>
+            
+            <!-- TAHAJJUD -->
+            <div class="prayer-sub-title">🪐 1. Tahajjud (Nachtgebet)</div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_tahajjud_pray">
+                <div class="checkbox-label">
+                    <strong>2 Rak'at Tahajjud gebetet</strong>
+                    <div class="meaning-text">Freiwilliges Gebet im letzten Drittel der Nacht. Höchste Stufe der Aufrichtigkeit.</div>
                 </div>
             </div>
-        </div>
 
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_haus_ein">
-            <div class="checkbox-label">
-                <strong>Haus betreten</strong>
-                <div class="dua-box">
-                    <div class="dua-trans">"Bismillah walajna, wa bismillah kharajna, wa 'ala Rabbina tawakkalna."</div>
+            <!-- WITR -->
+            <div class="prayer-sub-title">🌟 2. Witr (Abschlussgebet)</div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_witr_pray">
+                <div class="checkbox-label">
+                    <strong>3 Rak'at Witr gebetet</strong>
+                    <div class="meaning-text">In der letzten Rak'ah optional das Qunut-Dua sprechen (Texte auf Seite 2).</div>
                 </div>
             </div>
-        </div>
-
-        <div class="counter-container">
-            <div style="font-weight: bold; margin-bottom: 8px; font-size: 15px;">Haupt-Dhikr (100x täglich)</div>
-            <button class="counter-btn" id="dhikr-click-btn" onclick="incDhikr()">Klick: <span id="lbl-count">0</span> / 100</button>
-            <div class="dua-box" style="text-align: left; margin-top: 10px;">
-                <div class="dua-trans">"La ilaha illa-Allah wahdahu la sharika lah, lahul-mulku wa lahul-hamd, wa huwa 'ala kulli shay'in qadir."</div>
-                <div class="dua-meaning">Riesiger Lohn: Löschung von Sünden, 100 Hasanat und Schutz vor Shaytan.</div>
-            </div>
-            <div class="btn-group">
-                <button class="sub-btn" onclick="addDhikr(10)">+10</button>
-                <button class="sub-btn reset-danger" onclick="resetDhikr()">Zähler Reset</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. GEBETE TEMPLATE GENERATOR -->
-    <div id="gebete-container"></div>
-
-    <!-- 4. ABEND & SCHLAFEN -->
-    <div class="section-card">
-        <div class="section-title">🌙 4. Abend & Vor dem Schlafen</div>
-        
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_schlaf_suren">
-            <div class="checkbox-label">
-                <strong>Die 3 Schutzsuren (3x)</strong>
-                <div class="dua-meaning" style="margin-top: 4px;">Hände zusammennehmen, leicht hineinpusten, <strong>Al-Ikhlas, Al-Falaq und An-Nas</strong> rezitieren und über den Körper streichen. (3-mal wiederholen).</div>
-            </div>
-        </div>
-
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_schlaf_kursi">
-            <div class="checkbox-label">
-                <strong>Ayat al-Kursi</strong>
-                <details>
-                    <summary>Text anzeigen</summary>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_witr_dhikr">
+                <div class="checkbox-label">
+                    <strong>Dhikr direkt nach dem Witr-Salam (3x)</strong>
                     <div class="dua-box">
-                        <div class="dua-trans">"Allahu la ilaha illa huwal-hayyul-qayyum. La ta'khudhuhu sinatun wa la nawm. Lahu ma fis-samawati wa ma fil-ard. Man dhal-ladhi yashfa'u 'indahu illa bi-idhnih. Ya'lamu ma bayna aydihim wa ma khalfahum. Wa la yuhituna bi-shay'im-min 'ilmihi illa bima sha'. Wasi'a kursiyyuhus-samawati wal-ard, wa la ya'uduhu hifdhuhuma, wa huwal-'aliyyul-'adhim."</div>
+                        <div class="trans-text">"Subhanal-Malikil-Quddus"</div>
+                        <div class="meaning-text">Beim 3. Mal die Stimme etwas heben und langziehen: "Gepriesen sei der König, der Heilige."</div>
                     </div>
-                </details>
+                </div>
             </div>
-        </div>
 
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_schlaf_baqarah">
-            <div class="checkbox-label">
-                <strong>Letzten zwei Verse Sure Al-Baqarah (2:285-286)</strong>
-                <details>
-                    <summary>Text anzeigen</summary>
-                    <div class="dua-box">
-                        <div class="dua-trans">"Amanar-rasulu bima unzila ilayhi mir-rabbihi wal-mu'minun. Kullun amana billahi wa mala'ikatihi wa kutubihi wa rusulih. La nufarriqu bayna ahadim-mir-rusulih. Wa qalu sami'na wa ata'na ghufranaka rabbana wa ilaykal-masir. La yukallifullahu nafsan illa wus'aha. Laha ma kasabat wa 'alayha maktasabat. Rabbana la tu'akhidhna in-nasina aw akhta'na. Rabbana wa la tahmil 'alayna isran kama hamaltahu 'alal-ladhina min qablina. Rabbana wa la tuhammilna ma la taqata lana bih. Wa'fu 'anna, waghfir lana, warhamna. Anta mawlana fansurna 'alal-qawmil-kafirin."</div>
-                    </div>
-                </details>
+            <!-- SUNNAH FAJR -->
+            <div class="prayer-sub-title">⚡ 3. Sunnah von Fajr</div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_sunnah_fajr">
+                <div class="checkbox-label">
+                    <strong>2 Rak'at Sunnah gebetet (Sehr leicht & kurz)</strong>
+                    <div class="meaning-text">Wertvoller als die gesamte Welt und alles, was auf ihr ist! Sunnah: In Rak'ah 1 Al-Kafirun, in Rak'ah 2 Al-Ikhlas rezitieren.</div>
+                </div>
             </div>
-        </div>
 
-        <div class="checkbox-item">
-            <input type="checkbox" id="chk_schlaf_dua">
-            <div class="checkbox-label">
-                <strong>Dua auf der rechten Seite liegend</strong>
-                <div class="dua-box">
-                    <div class="dua-trans">"Bismika Rabbi wada'tu janbi wa bika arfa'uh. In amsakta nafsi farhamha, wa in arsaltaha fahfadhha bima tahfadhu bihi 'ibadakas-salihin."</div>
-                    <div class="dua-meaning">In Deinem Namen, mein Herr, lege ich meine Seite nieder... Wenn Du meine Seele nimmst, dann erbarme Dich ihrer.</div>
+            <!-- FAJR FARD -->
+            <div class="prayer-sub-title">🕌 4. Pflichtgebet Fajr</div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_fajr_fard">
+                <div class="checkbox-label"><strong>2 Rak'at Pflichtgebet gebetet</strong></div>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="chk_fajr_post">
+                <div class="checkbox-label">
+                    <strong>Post-Gebets Adhkar erledigt</strong>
+                    <div class="meaning-text">3x Istighfar, Ayat al-Kursi & Schutzsuren (Details s. unten oder nach den Pflichtgebeten).</div>
                 </div>
             </div>
         </div>
+
+        <!-- ALLTAGS-COUNTER DAZWISCHEN -->
+        <div class="section-card">
+            <div class="prayer-sub-title">📿 Ständiger Begleiter (100x)</div>
+            <div class="counter-container">
+                <button class="counter-btn" id="dhikr-click-btn" onclick="incDhikr()">Klick: <span id="lbl-count">0</span> / 100</button>
+                <div class="btn-group">
+                    <button class="sub-btn" onclick="addDhikr(10)">+10</button>
+                    <button class="sub-btn" style="background-color:#451a1a; color:#fca5a5;" onclick="resetDhikr()">Reset</button>
+                </div>
+                <div class="dua-box" style="text-align: left;">
+                    <div class="trans-text">"La ilaha illa-Allah wahdahu la sharika lah, lahul-mulku wa lahul-hamd, wa huwa 'ala kulli shay'in qadir."</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCK 2: TAGES- & ABENDBLOCK -->
+        <div class="section-card">
+            <div class="block-title day">☀️ Block 2: Tages- & Abendgebete</div>
+            
+            <!-- DHEUR, ASR, MAGHRIB, ISHA GENERATOR VIA JS -->
+            <div id="dynamic-gebete"></div>
+        </div>
+
+        <!-- GLOBAL RESET -->
+        <div class="footer-controls">
+            <button class="global-reset-btn" onclick="globalReset()">♻️ Ganzen Tag zurücksetzen</button>
+        </div>
     </div>
 
-    <!-- GLOBAL CONTROLS -->
-    <div class="footer-controls">
-        <button class="global-reset-btn" onclick="globalReset()">♻️ Ganzen Tag zurücksetzen</button>
+
+    <!-- ================= PAGE 2: LIBRARY (SUREN & DUAS) ================= -->
+    <div id="library" class="tab-content">
+        
+        <!-- SURE AL-KAFIRUN -->
+        <div class="section-card">
+            <div class="block-title morning">Suren für die Sunnah-Gebete</div>
+            <div class="prayer-sub-title">1. Sure Al-Kafirun (Wichtig für 1. Rak'ah Sunnah Fajr & Witr)</div>
+            <div class="dua-box">
+                <div class="arabic-text">قُلْ يَا أَيُّهَا الْكَافِرُونَ ﴿١﴾ لَا أَعْبُدُ مَا تَعْبُدُونَ ﴿٢﴾ وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ ﴿٣﴾ وَلَا أَنَا عَابِدٌ مَّا عَبَدتُّمْ ﴿٤﴾ وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ ﴿٥﴾ لَكُمْ دِينُكُمْ وَلِيَ دِينِ ﴿٦﴾</div>
+                <div class="trans-text"><strong>Druckschrift:</strong><br>1. Qul ya ayyuhal-kafirun.<br>2. La a'budu ma ta'budun.<br>3. Wa la antum 'abiduna ma a'bud.<br>4. Wa la ana 'abidum ma 'abattum.<br>5. Wa la antum 'abiduna ma a'bud.<br>6. Lakum dinukum wa liya din.</div>
+                <div class="meaning-text" style="margin-top:6px;"><strong>Bedeutung:</strong> Sprich: O ihr Ungläubigen! Ich diene nicht dem, dem ihr dient... Euch eure Religion und mir meine Religion.</div>
+            </div>
+
+            <!-- SURE AL-IKHLAS -->
+            <div class="prayer-sub-title" style="margin-top: 20px;">2. Sure Al-Ikhlas (Wichtig für 2. / letzte Rak'ah)</div>
+            <div class="dua-box">
+                <div class="arabic-text">قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ ﴿٤﴾</div>
+                <div class="trans-text"><strong>Druckschrift:</strong><br>1. Qul huwallahu ahad.<br>2. Allahus-samad.<br>3. Lam yalid wa lam yulad.<br>4. Wa lam yakullah hu kufuwan ahad.</div>
+                <div class="meaning-text" style="margin-top:6px;"><strong>Bedeutung:</strong> Sprich: Er ist Allah, ein Einer. Allah, der Überlegene. Er hat nicht gezeugt und ist nicht gezeugt worden...</div>
+            </div>
+        </div>
+
+        <!-- DUA AL-QUNUT -->
+        <div class="section-card">
+            <div class="block-title day">Witr Gebet Spezial-Dua</div>
+            <div class="prayer-sub-title">Dua Al-Qunut (In der 3. Rak'ah Witr vor/nach dem Ruku)</div>
+            <div class="dua-box">
+                <div class="arabic-text">اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّني فِيمَنْ تَوَلَّيْتَ، وَبَارِكْ لِي فِيمَا أَعْطَيْتَ، وَقِنِي شَرَّ مَا قَضَيْتَ، فَإِنَّكَ تَقْضِي وَلَا يُقْضَى عَلَيْكَ، وَإِنَّهُ لَا يَذِلُّ مَنْ وَالَيْتَ، تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ</div>
+                <div class="trans-text"><strong>Druckschrift:</strong><br>"Allahumma-hdini fiman hadayt, wa 'afini fiman 'afayt, wa tawallani fiman tawallayt, wa barik li fima a'tayt, wa qini sharra ma qadayt, fa-innaka taqdi wa la yuqda 'alayk, wa innahu la ya dhillu man walayt, tabarakta Rabbana wa ta'alayt."</div>
+                <div class="meaning-text" style="margin-top:6px;"><strong>Bedeutung:</strong> O Allah, leite mich recht unter jenen, die Du rechtgeleitet hast; und heile mich unter jenen, die Du geheilt hast; und nimm mich unter Deine Obhut unter jenen, die Du in Obhut genommen hast...</div>
+            </div>
+        </div>
     </div>
+
 
     <script>
-        const gebete = [
-            { id: 'fajr', name: '🕌 Fajr (Morgengebet)', surenCount: 3 },
-            { id: 'dhuhr', name: '🕌 Dhuhr (Mittagsgebet)', surenCount: 1 },
-            { id: 'asr', name: '🕌 Asr (Nachmittagsgebet)', surenCount: 1 },
-            { id: 'maghrib', name: '🕌 Maghrib (Abendgebet)', surenCount: 3 },
-            { id: 'isha', name: '🕌 Isha (Nachtgebet)', surenCount: 1 }
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // Generator for Block 2 (Daily Prayers)
+        const tagesGebete = [
+            { id: 'dhuhr', name: '🕌 Dhuhr (Mittagsgebet)', suren: 1 },
+            { id: 'asr', name: '🕌 Asr (Nachmittagsgebet)', suren: 1 },
+            { id: 'maghrib', name: '🕌 Maghrib (Abendgebet)', suren: 3 },
+            { id: 'isha', name: '🕌 Isha (Nachtgebet)', suren: 1 }
         ];
 
-        function renderGebete() {
-            const container = document.getElementById('gebete-container');
+        function renderTagesGebete() {
+            const container = document.getElementById('dynamic-gebete');
             let html = '';
-            
-            gebete.forEach(g => {
+            tagesGebete.forEach(g => {
                 html += `
-                <div class="section-card">
-                    <div class="section-title">${g.name}</div>
-                    
+                <div style="margin-top: 14px; border-top: 1px dashed var(--border-color); padding-top: 10px;">
+                    <div class="prayer-sub-title">${g.name}</div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="chk_${g.id}_gebettet">
+                        <input type="checkbox" id="chk_${g.id}_fard">
                         <div class="checkbox-label"><strong>Pflichtgebet gebetet</strong></div>
                     </div>
-
                     <div class="checkbox-item">
-                        <input type="checkbox" id="chk_${g.id}_istighfar">
+                        <input type="checkbox" id="chk_${g.id}_dhikr">
                         <div class="checkbox-label">
-                            <strong>3x Istighfar & Salam-Dua</strong>
-                            <div class="dua-box">
-                                <div class="dua-trans">"Astaghfirullah (3x). Allahumma antas-salam wa minkas-salam, tabarakta ya dhal-jalali wal-ikram."</div>
-                            </div>
+                            <strong>Dhikr nach Salam</strong>
+                            <div class="meaning-text">3x Istighfar, danach 33x Subhanallah, Alhamdulillah, Allahu Akbar. Abschluss mit La ilaha illa-Allah...</div>
                         </div>
                     </div>
-
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="chk_${g.id}_adhkar">
-                        <div class="checkbox-label">
-                            <strong>33x Subhanallah, Alhamdulillah, Allahu Akbar</strong>
-                            <div class="dua-meaning" style="margin-top:2px;">Abschluss (100.): <i>"La ilaha illa-Allah wahdahu..."</i></div>
-                        </div>
-                    </div>
-
                     <div class="checkbox-item">
                         <input type="checkbox" id="chk_${g.id}_kursi">
                         <div class="checkbox-label">
-                            <strong>Ayat al-Kursi & Schutzsuren (${g.surenCount}x)</strong>
-                            <details>
-                                <summary>Texte einblenden</summary>
-                                <div class="dua-box">
-                                    <div class="dua-trans" style="font-weight:bold; color:var(--accent-color);">Ayat al-Kursi:</div>
-                                    <div class="dua-trans" style="font-size:13px;">"Allahu la ilaha illa huwal-hayyul-qayyum. La ta'khudhuhu sinatun wa la nawm. Lahu ma fis-samawati wa ma fil-ard. Man dhal-ladhi yashfa'u 'indahu illa bi-idhnih. Ya'lamu ma bayna aydihim wa ma khalfahum. Wa la yuhituna bi-shay'im-min 'ilmihi illa bima sha'. Wasi'a kursiyyuhus-samawati wal-ard, wa la ya'uduhu hifdhuhuma, wa huwal-'aliyyul-'adhim."</div>
-                                    
-                                    <div class="dua-trans" style="font-weight:bold; color:var(--accent-color); margin-top:8px;">Die 3 Schutzsuren (${g.surenCount}x rezitieren):</div>
-                                    <div class="dua-trans" style="font-size:13px;"><b>Al-Ikhlas:</b> "Qul huwallahu ahad..."</div>
-                                    <div class="dua-trans" style="font-size:13px;"><b>Al-Falaq:</b> "Qul a'udhu bi-rabbil-falaq..."</div>
-                                    <div class="dua-trans" style="font-size:13px;"><b>An-Nas:</b> "Qul a'udhu bi-rabbin-nas..."</div>
-                                </div>
-                            </details>
+                            <strong>Ayat al-Kursi & Schutzsuren (${g.suren}x)</strong>
                         </div>
                     </div>
                 </div>`;
@@ -422,7 +408,7 @@
         }
 
         // Counter Logic
-        let dhikrCount = parseInt(localStorage.getItem('dhikr_count') || '0');
+        let dhikrCount = parseInt(localStorage.getItem('dhikr_count_v2') || '0');
         
         function updateCounterUI() {
             document.getElementById('lbl-count').innerText = dhikrCount;
@@ -439,32 +425,31 @@
         function incDhikr() {
             if (dhikrCount < 100) {
                 dhikrCount++;
-                localStorage.setItem('dhikr_count', dhikrCount);
+                // Mobile vibration feedback if supported
+                if (navigator.vibrate) navigator.vibrate(15);
+                localStorage.setItem('dhikr_count_v2', dhikrCount);
                 updateCounterUI();
             }
         }
 
         function addDhikr(val) {
             dhikrCount = Math.min(100, dhikrCount + val);
-            localStorage.setItem('dhikr_count', dhikrCount);
+            localStorage.setItem('dhikr_count_v2', dhikrCount);
             updateCounterUI();
         }
 
         function resetDhikr() {
-            if(confirm('Möchtest du den Dhikr-Zähler zurücksetzen?')) {
-                dhikrCount = 0;
-                localStorage.setItem('dhikr_count', 0);
-                updateCounterUI();
-            }
+            dhikrCount = 0;
+            localStorage.setItem('dhikr_count_v2', 0);
+            updateCounterUI();
         }
 
-        // Save states of checkboxes
-        function initStorageLogic() {
+        // Persistent Checkbox Logic
+        function initStorage() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(cb => {
-                const savedValue = localStorage.getItem(cb.id);
-                if (savedValue === 'true') cb.checked = true;
-
+                const saved = localStorage.getItem(cb.id);
+                if (saved === 'true') cb.checked = true;
                 cb.addEventListener('change', (e) => {
                     localStorage.setItem(cb.id, e.target.checked);
                 });
@@ -472,7 +457,7 @@
         }
 
         function globalReset() {
-            if (confirm('Bist du sicher? Dies setzt ALLE Haken und den Zähler für einen neuen Tag zurück.')) {
+            if (confirm('Möchtest du alle Haken und den Zähler für einen neuen Tag zurücksetzen?')) {
                 localStorage.clear();
                 dhikrCount = 0;
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -481,9 +466,9 @@
             }
         }
 
-        // Init App
-        renderGebete();
-        initStorageLogic();
+        // Startup Execution
+        renderTagesGebete();
+        initStorage();
         updateCounterUI();
     </script>
 </body>
